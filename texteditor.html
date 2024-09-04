@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor with Toggle Panel</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #mainContent {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative; 
+        }
+
+        #mainContent img {
+            max-width: 100%; 
+            float: left; 
+            margin-right: 15px; 
+            shape-outside: rectangle(0,0,0,0); 
+            transition: shape-outside 0.3s ease; 
+        }
+
+        #sidePanel {
+            width: 200px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            position: fixed;
+            top: 0;
+            left: -200px;
+            height: 100%;
+            transition: left 0.3s ease;
+            z-index: 1000;
+        }
+
+        #sidePanel.show {
+            left: 0;
+        }
+
+        #sidePanel h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        #sidePanel label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #sidePanel select,
+        #sidePanel input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mainContent">
+        <img src="https://via.placeholder.com/400" alt="Placeholder Image"> <!-- Example image -->
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla fringilla lectus in magna fringilla, a convallis dui malesuada. Ut vestibulum erat at laoreet.</p>
+        <p>Phasellus sit amet lectus eu neque imperdiet gravida. Nulla facilisi. Aliquam non nisl rutrum, malesuada diam at, tempor ex.</p>
+        <p>Curabitur eu ante maximus, luctus augue id, fermentum justo. Integer a dolor sed elit dapibus suscipit.</p>
+    </div>
+
+    <div id="sidePanel">
+        <h3>Text Settings</h3>
+        <label for="lineHeight">Line Height:</label>
+        <input type="range" id="lineHeight" name="lineHeight" min="1" max="3" step="0.1" value="1">
+        <label for="textWrap">Text Wrap:</label>
+        <select id="textWrap" name="textWrap">
+            <option value="none">None</option>
+            <option value="left">Left</option>
+            <option value="right">Right</option>
+            <option value="both">Both</option>
+        </select>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainContent = document.getElementById('mainContent');
+            const sidePanel = document.getElementById('sidePanel');
+            const togglePanelBtn = document.createElement('button');
+            togglePanelBtn.textContent = 'Toggle Panel';
+            togglePanelBtn.style.position = 'fixed';
+            togglePanelBtn.style.top = '20px';
+            togglePanelBtn.style.left = '20px';
+            togglePanelBtn.style.zIndex = '1000';
+            document.body.appendChild(togglePanelBtn);
+
+            togglePanelBtn.addEventListener('click', function() {
+                sidePanel.classList.toggle('show');
+            });
+
+            const lineHeightInput = document.getElementById('lineHeight');
+            const textWrapSelect = document.getElementById('textWrap');
+
+            lineHeightInput.addEventListener('input', function() {
+                mainContent.style.lineHeight = lineHeightInput.value;
+            });
+
+            textWrapSelect.addEventListener('change', function() {
+                const value = textWrapSelect.value;
+                if (value === 'none') {
+                    mainContent.style.clear = 'none';
+                    mainContent.style.float = 'none';
+                    mainContent.style.shapeOutside = 'none'; 
+                } else if (value === 'left') {
+                    mainContent.style.clear = 'left';
+                    mainContent.style.float = 'left';
+                    mainContent.style.shapeOutside = 'inset(0px 15px 0px 0px)'; 
+                } else if (value === 'right') {
+                    mainContent.style.clear = 'right';
+                    mainContent.style.float = 'right';
+                    mainContent.style.shapeOutside = 'inset(0px 0px 0px 15px)'; 
+                } else if (value === 'both') {
+                    mainContent.style.clear = 'both';
+                    mainContent.style.float = 'none';
+                    mainContent.style.shapeOutside = 'inset(0px 15px 0px 15px)'; 
+                }
+            });
+
+            document.addEventListener('contextmenu', function(event) {
+                event.preventDefault(); 
+                sidePanel.classList.toggle('show');
+                sidePanel.style.left = event.clientX + 'px';
+            });
+        });
+    </script>
+</body>
+</html>
